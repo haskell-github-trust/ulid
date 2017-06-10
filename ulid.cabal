@@ -1,0 +1,68 @@
+name:                ulid
+version:             0.1.0.0
+synopsis:            Implementation of ULID, lexicographically sortable unique identifiers
+description:         Implementation of alizain's ULID identifier (https://github.com/alizain/ulid ).
+
+                     UUID can be suboptimal for many uses-cases because:
+
+                     It isn't the most character efficient way of encoding 128 bits of randomness
+                     UUID v1/v2 is impractical in many environments, as it requires access to a unique, stable MAC address
+                     UUID v3/v5 requires a unique seed and produces randomly distributed IDs, which can cause fragmentation in many data structures
+                     UUID v4 provides no other information than randomness which can cause fragmentation in many data structures
+                     Instead, herein is proposed ULID:
+
+                     128-bit compatibility with UUID
+                     1.21e+24 unique ULIDs per millisecond
+                     Lexicographically sortable!
+                     Canonically encoded as a 26 character string, as opposed to the 36 character UUID
+                     Uses Crockford's base32 for better efficiency and readability (5 bits per character)
+                     Case insensitive
+                     No special characters (URL safe)
+homepage:            https://github.com/steven777400/ulid
+license:             BSD3
+license-file:        LICENSE
+author:              Steve Kollmansberger
+maintainer:          steve@kolls.net
+copyright:           2017 Steve Kollmansberger
+category:            Data
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Data.ULID
+                    ,  Data.ULID.Crockford
+                    ,  Data.ULID.Random
+                    ,  Data.ULID.TimeStamp
+  build-depends:       base >= 4.7 && < 5
+                    ,  crockford
+                    ,  time
+                    ,  crypto-api
+                    ,  random
+                    ,  bytestring
+                    ,  binary
+  default-language:    Haskell2010
+
+executable ulid-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , ulid
+                     , crypto-api
+  default-language:    Haskell2010
+
+test-suite ulid-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , hspec
+                     , ulid
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/steven777400/ulid.git
