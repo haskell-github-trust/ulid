@@ -4,12 +4,14 @@ module Data.ULID (
     getULID
 ) where
 
+import           Data.Binary
+import           Data.Monoid           ((<>))
 import           Data.Time.Clock.POSIX
 
 import           Data.ULID.Random
 import           Data.ULID.TimeStamp
 
-data ULID = ULID {    
+data ULID = ULID {
     timeStamp :: !ULIDTimeStamp,
     random    :: !ULIDRandom
     }
@@ -41,3 +43,10 @@ instance Read ULID where
         (ts, str2) <- reads str
         (rn, str3) <- reads str2
         return (ULID ts rn, str3)
+
+instance Binary ULID where
+    put (ULID ts bytes) = put ts <> put bytes
+    get = do
+        ts <- get
+        bytes <- get
+        return $ ULID ts bytes

@@ -4,8 +4,9 @@ import qualified Codec.Crockford as CR
 import           Text.Read
 
 -- source: https://stackoverflow.com/a/29153602
-leftpad m xs = replicate (m - length ys) '0' ++ ys
-    where ys = take m xs
+-- I removed the safety for m > length because that should never happen
+-- and if it does, I want it to crash!
+leftpad m xs = replicate (m - length xs) '0' ++ xs
 
 encode :: Int -> Integer -> String
 encode width = (leftpad width).(CR.encode)

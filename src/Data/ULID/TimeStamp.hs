@@ -4,10 +4,15 @@ module Data.ULID.TimeStamp (
     getULIDTimeStamp
 ) where
 
+import           Control.Monad
+import           Data.Binary
+import           Data.Binary.Roll
 import           Data.Time.Clock
 import           Data.Time.Clock.POSIX
 
-import           Data.ULID.Crockford
+import qualified Data.ULID.Crockford   as CR
+
+numBytes = 6 -- 48 bits
 
 -- UNIX time in milliseconds
 newtype ULIDTimeStamp = ULIDTimeStamp Integer
@@ -23,8 +28,11 @@ getULIDTimeStamp :: IO ULIDTimeStamp
 getULIDTimeStamp = mkULIDTimeStamp <$> getPOSIXTime
 
 instance Show ULIDTimeStamp where
-    show (ULIDTimeStamp i) = encode 10 i
+    show (ULIDTimeStamp i) = CR.encode 10 i
 
 instance Read ULIDTimeStamp where
-    readsPrec _ = map (\(c,r)->(ULIDTimeStamp c, r)) . decode 10
+    readsPrec _ = map (\(c,r)->(ULIDTimeStamp c, r)) . (CR.decode) 10
 
+instance Binary ULIDTimeStamp where
+    put (ULIDTimeStamp i) = mapM_ put (unroll numBytes i)
+    get = ULIDTimeStamp <$> roll <$> replicateM numBytes get
