@@ -72,3 +72,24 @@ main = do
             Right (rnd, g2) -> ULID t rnd   -- use g2, etc, to continue generating secure ULIDs
     print ulid3
 ````
+
+
+
+## Test Suite
+
+```
+stack test
+```
+
+## Performance
+
+```
+stack bench
+```
+
+```
+Running 1 benchmarks...
+Benchmark ulid-bench: RUNNING...
+217,868 op/s generate
+Benchmark ulid-bench: FINISH
+```

@@ -36,10 +36,7 @@ executable ulid-exe
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , ulid
-                     , crypto-api
-                     , time
-                     , text
-                     , format-numbers
+                     , crypto-api                     
   default-language:    Haskell2010
 
 test-suite ulid-test
@@ -53,6 +50,16 @@ test-suite ulid-test
                      , binary
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
+
+benchmark ulid-bench
+    type:                exitcode-stdio-1.0
+    hs-source-dirs:      bench
+    main-is:             Main.hs
+    build-depends:       base
+                      ,  ulid                     
+                      ,  time
+                      ,  text
+                      ,  format-numbers
 
 source-repository head
   type:     git

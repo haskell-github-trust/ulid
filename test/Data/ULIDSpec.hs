@@ -54,7 +54,7 @@ spec = do
             head (show u1) `shouldBe` '0'
         it "generates unique ulids in default configuration" $ do
             let ops = 1000
-            ulids <- replicateM ops getULID  -- TODO: use deepseq from NFData here
+            ulids <- replicateM ops getULID
             -- Verify uniqueness
             let n' = length $ nub ulids
             n' `shouldBe` ops
