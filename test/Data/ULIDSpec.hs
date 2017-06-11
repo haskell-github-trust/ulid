@@ -1,10 +1,12 @@
 module Data.ULIDSpec where
 
 import           Control.Concurrent
+import           Control.Monad        (replicateM)
 import           Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import           Data.Char
 import           Data.List
+import           Data.List            (nub)
 
 import           Data.ULID
 
@@ -50,6 +52,12 @@ spec = do
         it "starts with 0 (at least for the foreseeable future)" $ do
             u1 <- getULID
             head (show u1) `shouldBe` '0'
+        it "generates unique ulids in default configuration" $ do
+            let ops = 1000
+            ulids <- replicateM ops getULID  -- TODO: use deepseq from NFData here
+            -- Verify uniqueness
+            let n' = length $ nub ulids
+            n' `shouldBe` ops
   describe "encode/decode" $ do
         it "has encode/decode symmetry" $ do
             a1 <- getULID

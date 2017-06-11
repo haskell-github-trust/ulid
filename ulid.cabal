@@ -37,6 +37,9 @@ executable ulid-exe
   build-depends:       base
                      , ulid
                      , crypto-api
+                     , time
+                     , text
+                     , format-numbers
   default-language:    Haskell2010
 
 test-suite ulid-test

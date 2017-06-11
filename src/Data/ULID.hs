@@ -4,6 +4,7 @@ module Data.ULID (
     getULID
 ) where
 
+import           Control.Monad         (replicateM)
 import           Data.Binary
 import           Data.Monoid           ((<>))
 import           Data.Time.Clock.POSIX
