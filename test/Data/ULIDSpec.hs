@@ -5,6 +5,7 @@ import           Control.Monad        (replicateM)
 import           Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import           Data.Char
+import           Data.Hashable
 import           Data.List
 import           Data.List            (nub)
 import qualified System.Random        as R
@@ -82,3 +83,33 @@ spec = do
             let (u1, g') = R.random g :: (ULID, R.StdGen)
             let (u2, _) = R.random g' :: (ULID, R.StdGen)
             u1 `shouldNotBe` u2
+  describe "hash" $ do
+        -- The general contract of hashWithSalt is:
+        -- If two values are equal according to the == method,
+        -- then applying the hashWithSalt method on each of the two values
+        -- must produce the same integer result if the same salt is used in each case.
+        it "produces same hash for equal ulids" $ do
+            u1 <- getULID
+            let u2 = (read (show u1)) :: ULID
+            let salt = 12345
+            hashWithSalt salt u1 `shouldBe` hashWithSalt salt u2
+        -- It is not required that if two values are unequal according to the == method,
+        -- then applying the hashWithSalt method on each of the two values must produce distinct integer results.
+        -- However, the programmer should be aware that producing distinct integer results for unequal values
+        -- may improve the performance of hashing-based data structures.
+        it "produces different hash for nonequals ulids" $ do
+            u1 <- getULID
+            u2 <- getULID
+            let salt = 12345
+            -- this could rarely fail due to hash nature
+            hashWithSalt salt u1 `shouldNotBe` hashWithSalt salt u2
+        -- This method can be used to compute different hash values for the same input by
+        -- providing a different salt in each application of the method.
+        -- This implies that any instance that defines hashWithSaltmust make use of the salt in its implementation.
+        it "produces different hash for equals ulids with different salt" $ do
+            u1 <- getULID
+            let u2 = (read (show u1)) :: ULID
+            let salt = 12345
+            hashWithSalt salt u1 `shouldBe` hashWithSalt salt u2
+            let salt2 = 54321
+            hashWithSalt salt u1 `shouldNotBe` hashWithSalt salt2 u2

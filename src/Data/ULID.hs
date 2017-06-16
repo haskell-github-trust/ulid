@@ -38,10 +38,11 @@ module Data.ULID (
 import           Control.DeepSeq
 import           Data.Binary
 import           Data.Data
+import           Data.Hashable
 import           Data.Monoid           ((<>))
 import           Data.Time.Clock.POSIX
 import           System.IO.Unsafe
-import           System.Random
+import qualified System.Random         as R
 
 import           Data.ULID.Random
 import           Data.ULID.TimeStamp
@@ -92,10 +93,13 @@ instance Binary ULID where
 instance NFData ULID where
     rnf (ULID ts bytes) = rnf ts `seq` (rnf bytes `seq` ())
 
-instance Random ULID where
-    randomR _ = random -- ignore range
+instance R.Random ULID where
+    randomR _ = R.random -- ignore range
     random g = unsafePerformIO $ do
         t <- getULIDTimeStamp
         let (r, g') = mkULIDRandom g
         return (ULID t r, g')
     randomIO = getULID
+
+instance Hashable ULID where
+    hashWithSalt salt ulid = hashWithSalt salt (encode ulid)
