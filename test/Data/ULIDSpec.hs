@@ -67,6 +67,7 @@ spec = do
             a1 == a2 `shouldBe` False
             decode (encode a1) `shouldBe` a1
             decode (encode a2) `shouldBe` a2
+            encode a1 `shouldNotBe` encode a2
         it "encodes MSB first" $ do
             a1 <- getULIDTime 12345
             let e1 = encode a1
@@ -113,3 +114,24 @@ spec = do
             hashWithSalt salt u1 `shouldBe` hashWithSalt salt u2
             let salt2 = 54321
             hashWithSalt salt u1 `shouldNotBe` hashWithSalt salt2 u2
+  describe "to/from integer" $ do
+      it "is sortable" $ do
+            u1 <- getULID
+            threadDelay 1000
+            u2 <- getULID
+            threadDelay 1000
+            u3 <- getULID
+            threadDelay 1000
+            u4 <- getULID
+            threadDelay 1000
+            let l = [ulidToInteger u3, ulidToInteger u2, ulidToInteger u4, ulidToInteger u1]
+            let l' = sort l
+            l' `shouldBe` [ulidToInteger u1, ulidToInteger u2, ulidToInteger u3, ulidToInteger u4]
+      it "has to/from symmetry" $ do
+            a1 <- getULID
+            a2 <- getULID
+            a1 == a2 `shouldBe` False
+            ulidFromInteger (ulidToInteger a1) `shouldBe` a1
+            ulidFromInteger (ulidToInteger a2) `shouldBe` a2
+            ulidToInteger a1 `shouldNotBe` ulidToInteger a2
+
