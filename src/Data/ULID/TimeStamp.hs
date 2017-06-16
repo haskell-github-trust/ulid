@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module Data.ULID.TimeStamp (
     ULIDTimeStamp,
     mkULIDTimeStamp,
@@ -8,6 +9,7 @@ import           Control.DeepSeq
 import           Control.Monad
 import           Data.Binary
 import           Data.Binary.Roll
+import           Data.Data
 import           Data.Time.Clock
 import           Data.Time.Clock.POSIX
 
@@ -17,7 +19,7 @@ numBytes = 6 -- 48 bits
 
 -- UNIX time in milliseconds
 newtype ULIDTimeStamp = ULIDTimeStamp Integer
-    deriving (Eq, Ord)
+    deriving (Eq, Ord, Typeable, Data)
 
 -- | Generate a ULID Timestamp based on a specified time
 mkULIDTimeStamp :: POSIXTime -- ^ The specified UNIX time (seconds) to millisecond precision, e.g. 1469918176.385

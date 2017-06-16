@@ -28,6 +28,7 @@ Instead, herein is proposed ULID:
 * No special characters (URL safe)
 
 -}
+{-# LANGUAGE DeriveDataTypeable #-}
 module Data.ULID (
     ULID(..),
     getULIDTime,
@@ -36,6 +37,7 @@ module Data.ULID (
 
 import           Control.DeepSeq
 import           Data.Binary
+import           Data.Data
 import           Data.Monoid           ((<>))
 import           Data.Time.Clock.POSIX
 
@@ -46,7 +48,7 @@ data ULID = ULID {
     timeStamp :: !ULIDTimeStamp,
     random    :: !ULIDRandom
     }
-    deriving (Eq)
+    deriving (Eq, Typeable, Data)
 
 -- | Derive a ULID using a specified time and default random number generator
 getULIDTime :: POSIXTime    -- ^ The specified UNIX time (seconds) to millisecond precision, e.g. 1469918176.385

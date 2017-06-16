@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module Data.ULID.Random (
     ULIDRandom,
     mkCryptoULIDRandom,
@@ -11,6 +12,7 @@ import           Crypto.Random
 import           Data.Binary
 import           Data.Binary.Roll
 import qualified Data.ByteString     as BS
+import           Data.Data
 import           Data.Word
 import           System.Random
 
@@ -19,7 +21,7 @@ import qualified Data.ULID.Crockford as CR
 
 
 newtype ULIDRandom = ULIDRandom BS.ByteString
-    deriving (Eq)
+    deriving (Eq, Typeable, Data)
 
 numBytes = 10 -- 80 bits
 
