@@ -40,6 +40,8 @@ import           Data.Binary
 import           Data.Data
 import           Data.Monoid           ((<>))
 import           Data.Time.Clock.POSIX
+import           System.IO.Unsafe
+import           System.Random
 
 import           Data.ULID.Random
 import           Data.ULID.TimeStamp
@@ -89,3 +91,11 @@ instance Binary ULID where
 -- It's no harm to leave it in
 instance NFData ULID where
     rnf (ULID ts bytes) = rnf ts `seq` (rnf bytes `seq` ())
+
+instance Random ULID where
+    randomR _ _ = error "No range allowed for random ULID"
+    random g = unsafePerformIO $ do
+        t <- getULIDTimeStamp
+        let (r, g') = mkULIDRandom g
+        return (ULID t r, g')
+    randomIO = getULID

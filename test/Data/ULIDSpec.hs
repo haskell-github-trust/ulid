@@ -7,6 +7,7 @@ import qualified Data.ByteString.Lazy as LBS
 import           Data.Char
 import           Data.List
 import           Data.List            (nub)
+import qualified System.Random        as R
 
 import           Data.ULID
 
@@ -71,3 +72,13 @@ spec = do
             -- this works because the time value is small, and time is sequences first, so the MSB for this value should be 0
             LBS.head e1 `shouldBe` 0
             LBS.last e1 `shouldNotBe` 0
+  describe "random" $ do
+        it "works in IO" $ do
+            u1 <- (R.randomIO :: IO ULID)
+            u2 <- (R.randomIO :: IO ULID)
+            u1 `shouldNotBe` u2
+        it "works with randomgen" $ do
+            g <- R.getStdGen
+            let (u1, g') = R.random g :: (ULID, R.StdGen)
+            let (u2, _) = R.random g' :: (ULID, R.StdGen)
+            u1 `shouldNotBe` u2
