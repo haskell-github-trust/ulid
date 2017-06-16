@@ -28,6 +28,7 @@ library
                     ,  random
                     ,  bytestring
                     ,  binary
+                    ,  deepseq
   default-language:    Haskell2010
 
 executable ulid-exe
@@ -60,6 +61,7 @@ benchmark ulid-bench
                       ,  time
                       ,  text
                       ,  format-numbers
+                      ,  deepseq
 
 source-repository head
   type:     git

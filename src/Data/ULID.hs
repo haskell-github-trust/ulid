@@ -34,6 +34,7 @@ module Data.ULID (
     getULID
 ) where
 
+import           Control.DeepSeq
 import           Data.Binary
 import           Data.Monoid           ((<>))
 import           Data.Time.Clock.POSIX
@@ -80,3 +81,9 @@ instance Binary ULID where
         ts <- get
         bytes <- get
         return $ ULID ts bytes
+
+-- Because of the strictness annotations, this shouldn't be needed and shouldn't do anything
+-- I tested and confirmed this in the benchmark, but since I did the work to put it here
+-- It's no harm to leave it in
+instance NFData ULID where
+    rnf (ULID ts bytes) = rnf ts `seq` (rnf bytes `seq` ())

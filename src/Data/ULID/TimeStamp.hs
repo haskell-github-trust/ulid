@@ -4,6 +4,7 @@ module Data.ULID.TimeStamp (
     getULIDTimeStamp
 ) where
 
+import           Control.DeepSeq
 import           Control.Monad
 import           Data.Binary
 import           Data.Binary.Roll
@@ -36,3 +37,6 @@ instance Read ULIDTimeStamp where
 instance Binary ULIDTimeStamp where
     put (ULIDTimeStamp i) = mapM_ put (unroll numBytes i)
     get = ULIDTimeStamp <$> roll <$> replicateM numBytes get
+
+instance NFData ULIDTimeStamp where
+    rnf (ULIDTimeStamp i) = rnf i

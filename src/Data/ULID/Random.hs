@@ -5,6 +5,7 @@ module Data.ULID.Random (
     getULIDRandom
 ) where
 
+import           Control.DeepSeq
 import           Control.Monad
 import           Crypto.Random
 import           Data.Binary
@@ -50,3 +51,6 @@ instance Read ULIDRandom where
 instance Binary ULIDRandom where
     put (ULIDRandom r) = mapM_ put (BS.unpack $ r)
     get = ULIDRandom <$> (BS.pack) <$> replicateM numBytes get
+
+instance NFData ULIDRandom where
+    rnf (ULIDRandom r) = rnf r
