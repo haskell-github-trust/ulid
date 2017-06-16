@@ -93,7 +93,7 @@ instance NFData ULID where
     rnf (ULID ts bytes) = rnf ts `seq` (rnf bytes `seq` ())
 
 instance Random ULID where
-    randomR _ _ = error "No range allowed for random ULID"
+    randomR _ = random -- ignore range
     random g = unsafePerformIO $ do
         t <- getULIDTimeStamp
         let (r, g') = mkULIDRandom g
