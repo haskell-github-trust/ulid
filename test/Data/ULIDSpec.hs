@@ -6,8 +6,7 @@ import           Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import           Data.Char
 import           Data.Hashable
-import           Data.List
-import           Data.List            (nub)
+import           Data.List            (nub, sort)
 import qualified System.Random        as R
 
 import           Data.ULID
@@ -134,4 +133,6 @@ spec = do
             ulidFromInteger (ulidToInteger a1) `shouldBe` a1
             ulidFromInteger (ulidToInteger a2) `shouldBe` a2
             ulidToInteger a1 `shouldNotBe` ulidToInteger a2
-
+      it "handles negative integers" $ do
+            a1 <- getULID
+            ulidFromInteger (negate (ulidToInteger a1)) `shouldBe` a1

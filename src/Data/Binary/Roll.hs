@@ -8,7 +8,7 @@ import           Data.List   (foldl', unfoldr)
 -- | unroll and produce an exact number of bytes (left-pad with 0 bytes)
 unroll :: Int -> Integer -> [Word8]
 unroll bytes val = replicate (bytes - length xs) 0 ++ xs
-    where xs = unroll' val
+    where xs = unroll' (abs val)
 
 -- source: http://hackage.haskell.org/package/binary-0.8.5.1/docs/src/Data-Binary-Class.html#line-311
 --
