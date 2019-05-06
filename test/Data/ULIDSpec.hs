@@ -130,11 +130,11 @@ spec = do
             a1 <- getULID
             a2 <- getULID
             a1 == a2 `shouldBe` False
-            ulidFromInteger (ulidToInteger a1) `shouldBe` (Just a1)
-            ulidFromInteger (ulidToInteger a2) `shouldBe` (Just a2)
+            ulidFromInteger (ulidToInteger a1) `shouldBe` (Right a1)
+            ulidFromInteger (ulidToInteger a2) `shouldBe` (Right a2)
             ulidToInteger a1 `shouldNotBe` ulidToInteger a2
       it "handles out-of-range integer" $ do
             a1 <- getULID
-            ulidFromInteger (negate (ulidToInteger a1)) `shouldBe` Nothing
-            ulidFromInteger (-1) `shouldBe` Nothing
-            ulidFromInteger (2 ^ 128) `shouldBe` Nothing
+            ulidFromInteger (negate (ulidToInteger a1)) `shouldBe` Left "Value must not be negative"
+            ulidFromInteger (-1) `shouldBe` Left "Value must not be negative"
+            ulidFromInteger (2 ^ 128) `shouldBe` Left "Value must not be larger than the maximum safe Integer size (128 bits)"
