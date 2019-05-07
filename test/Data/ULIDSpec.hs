@@ -6,8 +6,7 @@ import           Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import           Data.Char
 import           Data.Hashable
-import           Data.List
-import           Data.List            (nub)
+import           Data.List            (nub, sort)
 import qualified System.Random        as R
 
 import           Data.ULID
@@ -131,7 +130,11 @@ spec = do
             a1 <- getULID
             a2 <- getULID
             a1 == a2 `shouldBe` False
-            ulidFromInteger (ulidToInteger a1) `shouldBe` a1
-            ulidFromInteger (ulidToInteger a2) `shouldBe` a2
+            ulidFromInteger (ulidToInteger a1) `shouldBe` (Right a1)
+            ulidFromInteger (ulidToInteger a2) `shouldBe` (Right a2)
             ulidToInteger a1 `shouldNotBe` ulidToInteger a2
-
+      it "handles out-of-range integer" $ do
+            a1 <- getULID
+            ulidFromInteger (negate (ulidToInteger a1)) `shouldBe` Left "Value must not be negative"
+            ulidFromInteger (-1) `shouldBe` Left "Value must not be negative"
+            ulidFromInteger (2 ^ 128) `shouldBe` Left "Value must not be larger than the maximum safe Integer size (128 bits)"
