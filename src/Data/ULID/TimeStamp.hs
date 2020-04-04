@@ -13,7 +13,8 @@ import           Data.Data
 import           Data.Time.Clock
 import           Data.Time.Clock.POSIX
 
-import qualified Data.ULID.Crockford   as CR
+import qualified Data.ULID.Base32 as B32
+
 
 numBytes = 6 -- 48 bits
 
@@ -31,10 +32,10 @@ getULIDTimeStamp :: IO ULIDTimeStamp
 getULIDTimeStamp = mkULIDTimeStamp <$> getPOSIXTime
 
 instance Show ULIDTimeStamp where
-    show (ULIDTimeStamp i) = CR.encode 10 i
+    show (ULIDTimeStamp i) = B32.encode 10 i
 
 instance Read ULIDTimeStamp where
-    readsPrec _ = map (\(c,r)->(ULIDTimeStamp c, r)) . (CR.decode) 10
+    readsPrec _ = map (\(c,r)->(ULIDTimeStamp c, r)) . (B32.decode) 10
 
 instance Binary ULIDTimeStamp where
     put (ULIDTimeStamp i) = mapM_ put (unroll numBytes i)

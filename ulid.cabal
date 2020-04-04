@@ -17,12 +17,12 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Data.ULID
-                    ,  Data.ULID.Crockford
+                    ,  Data.ULID.Base32
+                    ,  Data.ULID.Digits
                     ,  Data.ULID.Random
                     ,  Data.ULID.TimeStamp
   other-modules:       Data.Binary.Roll                  
   build-depends:       base >= 4.7 && < 5
-                    ,  crockford
                     ,  time
                     ,  crypto-api
                     ,  random
@@ -45,6 +45,10 @@ test-suite ulid-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
+  other-modules:       Data.ULID.Base32Spec
+                     , Data.ULID.RandomSpec
+                     , Data.ULID.TimeStampSpec
+                     , Data.ULIDSpec
   build-depends:       base
                      , hspec
                      , ulid

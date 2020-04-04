@@ -17,7 +17,7 @@ import           Data.Word
 import           System.Random
 
 
-import qualified Data.ULID.Crockford as CR
+import qualified Data.ULID.Base32 as B32
 
 
 newtype ULIDRandom = ULIDRandom BS.ByteString
@@ -45,10 +45,10 @@ getULIDRandom :: IO ULIDRandom
 getULIDRandom = fst <$> mkULIDRandom <$> newStdGen -- Note: the call to newStdGen splits the generator, so this is safe to call multiple times
 
 instance Show ULIDRandom where
-    show (ULIDRandom r) =  (CR.encode) 16.roll.(BS.unpack) $ r
+    show (ULIDRandom r) =  (B32.encode) 16.roll.(BS.unpack) $ r
 
 instance Read ULIDRandom where
-    readsPrec _ = map (\(c,r)->(ULIDRandom $ (BS.pack) $ unroll numBytes c, r)) . (CR.decode) 16
+    readsPrec _ = map (\(c,r)->(ULIDRandom $ (BS.pack) $ unroll numBytes c, r)) . (B32.decode) 16
 
 instance Binary ULIDRandom where
     put (ULIDRandom r) = mapM_ put (BS.unpack $ r)
