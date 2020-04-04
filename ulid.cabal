@@ -1,5 +1,5 @@
 name:                ulid
-version:             0.2.0.0
+version:             0.3.0.0
 synopsis:            Implementation of ULID - Universally Unique
                      Lexicographically Sortable Identifier
 description:         Implementation of Alizain Feerasta's ULID specification.
