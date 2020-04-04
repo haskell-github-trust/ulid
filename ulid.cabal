@@ -14,7 +14,7 @@ license-file:        LICENSE
 author:              Steve Kollmansberger
 maintainer:          ulid@ad-si.com
 copyright:           2017 Steve Kollmansberger
-category:            Data
+category:            Data, Codec, Database
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
