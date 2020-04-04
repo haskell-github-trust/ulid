@@ -1,18 +1,24 @@
 name:                ulid
 version:             0.2.0.0
-synopsis:            Implementation of ULID, lexicographically sortable unique identifiers
-description:         Implementation of alizain's ULID identifier. Canonically encoded as a 26 character string, as opposed to the 36 character UUID. 
-                     Uses Crockford's base32 for better efficiency and readability (5 bits per character)
-homepage:            https://github.com/steven777400/ulid
+synopsis:            Implementation of ULID - Universally Unique
+                     Lexicographically Sortable Identifier
+description:         Implementation of Alizain Feerasta's ULID specification.
+                     A 26 character string identifier,
+                     as opposed to the 36 character UUID string.
+                     Uses Douglas Crockford's base 32 encoding
+                     for better efficiency and readability
+                     (5 bits per character).
+homepage:            https://github.com/ad-si/ulid
 license:             BSD3
 license-file:        LICENSE
 author:              Steve Kollmansberger
-maintainer:          steve@kolls.net
+maintainer:          ulid@ad-si.com
 copyright:           2017 Steve Kollmansberger
 category:            Data
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
+
 
 library
   hs-source-dirs:      src
@@ -21,16 +27,19 @@ library
                     ,  Data.ULID.Digits
                     ,  Data.ULID.Random
                     ,  Data.ULID.TimeStamp
-  other-modules:       Data.Binary.Roll                  
+  other-modules:       Data.Binary.Roll
   build-depends:       base >= 4.7 && < 5
-                    ,  time
-                    ,  crypto-api
-                    ,  random
-                    ,  bytestring
                     ,  binary
+                    ,  bytestring
+                    ,  crypto-api
                     ,  deepseq
                     ,  hashable
+                    ,  random
+                    ,  text
+                    ,  time
   default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
+
 
 executable ulid-exe
   hs-source-dirs:      app
@@ -38,8 +47,9 @@ executable ulid-exe
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , ulid
-                     , crypto-api                     
+                     , crypto-api
   default-language:    Haskell2010
+
 
 test-suite ulid-test
   type:                exitcode-stdio-1.0
@@ -58,18 +68,23 @@ test-suite ulid-test
                      , hashable
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
+
 
 benchmark ulid-bench
-    type:                exitcode-stdio-1.0
-    hs-source-dirs:      bench
-    main-is:             Main.hs
-    build-depends:       base
-                      ,  ulid                     
-                      ,  time
-                      ,  text
-                      ,  format-numbers
-                      ,  deepseq
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      bench
+  main-is:             Main.hs
+  build-depends:       base
+                    ,  ulid
+                    ,  time
+                    ,  text
+                    ,  format-numbers
+                    ,  deepseq
+  default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
+
 
 source-repository head
   type:     git
-  location: https://github.com/steven777400/ulid.git
+  location: https://github.com/ad-si/ulid.git

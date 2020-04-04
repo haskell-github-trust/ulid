@@ -1,27 +1,39 @@
 -- | Partly adapted from https://hackage.haskell.org/package/crockford
-module Data.ULID.Base32 (encode, decode) where
+module Data.ULID.Base32
+  ( encode
+  , encodeChar
+  , decode
+  , decodeChar
+  )
+where
 
 import Data.Char
 import Data.Maybe
 import Text.Read
+import Data.Text as T
 
 import Data.ULID.Digits (digits, unDigits)
 
 
--- | Decodes a Crockford base 32 encoded String into an integer, if possible.
--- Returns nothing if the string is not a valid encoded value.
-decodePlain :: Integral i => String -> Maybe i
-decodePlain s = mapM decodeChar s >>= return . unDigits 32
+-- | Decodes a Crockford base 32 encoded `Text` into an natural number,
+-- if possible. Returns `Nothing` if the `Text` is not a valid encoded value.
+decodePlain :: Integral i => Text -> Maybe i
+decodePlain base32text = do
+  numbers <- mapM decodeChar $ T.unpack base32text
+  pure $ unDigits 32 numbers
 
 
--- | Encodes an integer into a String,
+-- | Encodes an natural number into a Text,
 -- using Douglas Crockford's base 32 encoding.
-encodePlain :: Integral i => i -> String
-encodePlain = fromJust . mapM encodeChar . digits 32
+-- Returns `Nothing` if number is negative.
+encodePlain :: Integral i => i -> Text
+encodePlain =
+  T.pack . fmap encodeChar . digits 32
 
 
+-- | Decode a character to its corresponding integer
 decodeChar :: Integral i => Char -> Maybe i
-decodeChar c = case toUpper c of
+decodeChar c = case Data.Char.toUpper c of
     '0' -> Just 0
     'O' -> Just 0
     '1' -> Just 1
@@ -60,56 +72,83 @@ decodeChar c = case toUpper c of
     _ -> Nothing
 
 
-encodeChar :: Integral i => i -> Maybe Char
+-- | Encode an integer to its corresponding character
+encodeChar :: Integral i => i -> Char
 encodeChar i = case i of
-    0  -> Just '0'
-    1  -> Just '1'
-    2  -> Just '2'
-    3  -> Just '3'
-    4  -> Just '4'
-    5  -> Just '5'
-    6  -> Just '6'
-    7  -> Just '7'
-    8  -> Just '8'
-    9  -> Just '9'
-    10 -> Just 'A'
-    11 -> Just 'B'
-    12 -> Just 'C'
-    13 -> Just 'D'
-    14 -> Just 'E'
-    15 -> Just 'F'
-    16 -> Just 'G'
-    17 -> Just 'H'
-    18 -> Just 'J'
-    19 -> Just 'K'
-    20 -> Just 'M'
-    21 -> Just 'N'
-    22 -> Just 'P'
-    23 -> Just 'Q'
-    24 -> Just 'R'
-    25 -> Just 'S'
-    26 -> Just 'T'
-    27 -> Just 'V'
-    28 -> Just 'W'
-    29 -> Just 'X'
-    30 -> Just 'Y'
-    31 -> Just 'Z'
-    _ -> Nothing
+    0  -> '0'
+    1  -> '1'
+    2  -> '2'
+    3  -> '3'
+    4  -> '4'
+    5  -> '5'
+    6  -> '6'
+    7  -> '7'
+    8  -> '8'
+    9  -> '9'
+    10 -> 'A'
+    11 -> 'B'
+    12 -> 'C'
+    13 -> 'D'
+    14 -> 'E'
+    15 -> 'F'
+    16 -> 'G'
+    17 -> 'H'
+    18 -> 'J'
+    19 -> 'K'
+    20 -> 'M'
+    21 -> 'N'
+    22 -> 'P'
+    23 -> 'Q'
+    24 -> 'R'
+    25 -> 'S'
+    26 -> 'T'
+    27 -> 'V'
+    28 -> 'W'
+    29 -> 'X'
+    30 -> 'Y'
+    31 -> 'Z'
+    _  -> '0'
 
 
 -- | Source: https://stackoverflow.com/a/29153602
--- The safety for m > length was removed, because that should never happen
+-- The safety for m > length was removed, because that should never happen.
 -- If it does, it should crash.
-leftpad m xs = replicate (m - length xs) '0' ++ xs
+leftpad :: Int -> Text -> Text
+leftpad m xs =
+  T.replicate (m - T.length xs) "0" <> xs
 
 
-encode :: Int -> Integer -> String
-encode width = (leftpad width).(encodePlain)
+-- | Converts all negative numbers to 0
+clampZero :: Integral i => i -> i
+clampZero x =
+  if x < 0
+  then 0
+  else x
 
 
-decode :: Int -> ReadS Integer
-decode width str  | length str >= width   = let
-                    (crock, remainder) = splitAt width str
+-- | >>> encode 5 123
+-- "0003V"
+--
+-- | >>> encode (-5) (-123)
+-- ""
+encode
+  :: Integral i
+  => Int  -- ^ Overall length of resulting Text
+  -> i  -- ^ Natural number to encode
+  -> Text  -- ^ 0 padded, Douglas Crockford's base 32 encoded Text
+encode width =
+  (leftpad $ clampZero width) . encodePlain . clampZero
+
+
+-- | >>> decode 5 "0003V"
+-- [(123,"")]
+decode
+  :: Integral i
+  => Int  -- ^ Overall length of input Text
+  -> Text  -- ^ Base 32 encoded Text
+  -> [(i, Text)]  -- ^ List of possible parses
+decode width str  | T.length str >= width   = let
+                      (crock, remainder) = T.splitAt width str
                     in case decodePlain crock of
                         Nothing -> []
                         Just c  -> [(c, remainder)]
