@@ -1,6 +1,7 @@
 -- | Custom data type for timestamps (milliseconds since 1970)
 
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Data.ULID.TimeStamp (
     ULIDTimeStamp,
     mkULIDTimeStamp,
@@ -16,6 +17,7 @@ import           Data.Maybe
 import           Data.Text as T
 import           Data.Time.Clock
 import           Data.Time.Clock.POSIX
+import           GHC.Generics
 
 import qualified Data.ULID.Base32 as B32
 
@@ -24,7 +26,7 @@ numBytes = 6 -- 48 bits
 
 -- | UNIX time in milliseconds
 newtype ULIDTimeStamp = ULIDTimeStamp Integer
-    deriving (Eq, Ord, Typeable, Data)
+    deriving (Eq, Ord, Typeable, Data, Generic)
 
 instance Show ULIDTimeStamp where
     show (ULIDTimeStamp i) = T.unpack $ B32.encode 10 i
