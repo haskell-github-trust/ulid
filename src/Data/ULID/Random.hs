@@ -2,6 +2,7 @@
 -- either with PRNGs or TRNGs.
 
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Data.ULID.Random (
     ULIDRandom,
     mkCryptoULIDRandom,
@@ -19,6 +20,7 @@ import Data.Data
 import Data.Maybe
 import Data.Word
 import Data.Text as T hiding (split, take)
+import GHC.Generics
 import System.Random
 
 
@@ -27,7 +29,7 @@ import qualified Data.ULID.Base32 as B32
 
 -- | Newtype wrapping a `ByteString`
 newtype ULIDRandom = ULIDRandom BS.ByteString
-    deriving (Eq, Typeable, Data)
+    deriving (Eq, Typeable, Data, Generic)
 
 instance Show ULIDRandom where
     show (ULIDRandom r) = T.unpack $ B32.encode 16.roll.(BS.unpack) $ r

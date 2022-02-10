@@ -27,6 +27,7 @@ Instead, herein is proposed ULID:
 -}
 
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Data.ULID (
     ULID(..),
     getULIDTime,
@@ -43,6 +44,7 @@ import           Data.Hashable
 import           Data.Monoid           ((<>))
 import           Data.Text as T
 import           Data.Time.Clock.POSIX
+import           GHC.Generics
 import           System.IO.Unsafe
 import qualified System.Random         as R
 
@@ -60,7 +62,7 @@ data ULID = ULID
   { timeStamp :: !ULIDTimeStamp
   , random    :: !ULIDRandom
   }
-  deriving (Eq, Typeable, Data)
+  deriving (Eq, Typeable, Data, Generic)
 
 instance Ord ULID where
     compare (ULID ts1 _) (ULID ts2 _) = compare ts1 ts2
