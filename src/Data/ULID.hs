@@ -97,7 +97,6 @@ instance R.Random ULID where
         t <- getULIDTimeStamp
         let (r, g') = mkULIDRandom g
         return (ULID t r, g')
-    randomIO = getULID
 
 instance Hashable ULID where
     hashWithSalt salt ulid = hashWithSalt salt (encode ulid)
