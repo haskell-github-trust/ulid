@@ -32,18 +32,18 @@ newtype ULIDRandom = ULIDRandom BS.ByteString
     deriving (Eq, Typeable, Data, Generic)
 
 instance Show ULIDRandom where
-    show (ULIDRandom r) = T.unpack $ B32.encode 16.roll.(BS.unpack) $ r
+    show (ULIDRandom r) = T.unpack $ B32.encode 16 . roll . BS.unpack $ r
 
 instance Read ULIDRandom where
   readsPrec _ = fmap
     (\(int, rest) ->
         (ULIDRandom $ BS.pack $ unroll numBytes int, T.unpack rest))
-    . (B32.decode $ 16)
+    . B32.decode 16
     . T.pack
 
 instance Binary ULIDRandom where
-    put (ULIDRandom r) = mapM_ put (BS.unpack $ r)
-    get = ULIDRandom <$> (BS.pack) <$> replicateM numBytes get
+    put (ULIDRandom r) = mapM_ put (BS.unpack r)
+    get = ULIDRandom . BS.pack <$> replicateM numBytes get
 
 instance NFData ULIDRandom where
     rnf (ULIDRandom r) = rnf r
@@ -68,7 +68,7 @@ mkCryptoULIDRandom g = do
 mkULIDRandom :: RandomGen g => g -> (ULIDRandom, g)
 mkULIDRandom g = let
   (g1, g2) = split g
-  genbytes = (BS.pack) . take numBytes . randoms
+  genbytes = BS.pack . take numBytes . randoms
   in (ULIDRandom $ genbytes g, g2)
 
 
@@ -77,4 +77,4 @@ getULIDRandom :: IO ULIDRandom
 -- | Note: The call to `newStdGen` splits the generator,
 -- so this is safe to call multiple times
 getULIDRandom =
-  fst <$> mkULIDRandom <$> newStdGen
+  fst . mkULIDRandom <$> newStdGen

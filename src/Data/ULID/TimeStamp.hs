@@ -33,13 +33,13 @@ instance Show ULIDTimeStamp where
 
 instance Read ULIDTimeStamp where
     readsPrec _ = fmap
-        (\(int, rest)->(ULIDTimeStamp int, T.unpack rest))
-        . (B32.decode) 10
+        (\(int, rest) -> (ULIDTimeStamp int, T.unpack rest))
+        . B32.decode 10
         . T.pack
 
 instance Binary ULIDTimeStamp where
     put (ULIDTimeStamp i) = mapM_ put (unroll numBytes i)
-    get = ULIDTimeStamp <$> roll <$> replicateM numBytes get
+    get = ULIDTimeStamp . roll <$> replicateM numBytes get
 
 instance NFData ULIDTimeStamp where
     rnf (ULIDTimeStamp i) = rnf i

@@ -68,7 +68,7 @@ instance Ord ULID where
     compare (ULID ts1 _) (ULID ts2 _) = compare ts1 ts2
 
 instance Show ULID where
-    show (ULID ts bytes) = (show ts) ++ (show bytes)
+    show (ULID ts bytes) = show ts ++ show bytes
 
 instance Read ULID where
     readsPrec _ str = do
@@ -89,7 +89,7 @@ instance Binary ULID where
 -- but since the work to put it here has already been done
 -- it's no harm to leave it in.
 instance NFData ULID where
-    rnf (ULID ts bytes) = rnf ts `seq` (rnf bytes `seq` ())
+    rnf (ULID ts bytes) = rnf ts `seq` rnf bytes
 
 instance R.Random ULID where
     randomR _ = R.random -- ignore range
@@ -127,7 +127,8 @@ getULID = do
 -- than storing the shown `Text`,
 -- but still human-readable unlike the Binary version.
 ulidToInteger :: ULID -> Integer
-ulidToInteger = roll.(LBS.unpack).encode
+ulidToInteger =
+    roll . LBS.unpack . encode
 
 
 -- | Convert a ULID from its corresponding 128-bit Integer.
@@ -139,7 +140,7 @@ ulidFromInteger n
     | n > maxValidInteger = Left
         "Value must not be larger than the maximum safe Integer size (128 bits)"
     | otherwise = Right
-        . decode . LBS.pack . (unroll 16) $ n  -- 16 bytes = 128 bit
+        . decode . LBS.pack . unroll 16 $ n  -- 16 bytes = 128 bit
   where
     maxValidInteger :: Integer
     maxValidInteger = (2 ^ 128) - 1

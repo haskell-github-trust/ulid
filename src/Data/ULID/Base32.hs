@@ -137,7 +137,7 @@ encode
   -> i  -- ^ Natural number to encode
   -> Text  -- ^ 0 padded, Douglas Crockford's base 32 encoded Text
 encode width =
-  (leftpad $ clampZero width) . encodePlain . clampZero
+  leftpad (clampZero width) . encodePlain . clampZero
 
 
 -- | >>> decode 5 "0003V"
