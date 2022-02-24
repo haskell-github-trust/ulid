@@ -19,6 +19,10 @@ build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
+flag aeson
+  description: build json de-/encoding via aeson
+  default: False
+
 
 library
   hs-source-dirs:      src
@@ -39,6 +43,9 @@ library
                     ,  time
   default-language:    Haskell2010
   default-extensions:  OverloadedStrings
+  if flag(aeson)
+    build-depends: aeson
+    exposed-modules: Data.ULID.Aeson
 
 
 executable ulid-exe
@@ -55,7 +62,8 @@ test-suite ulid-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Data.ULID.Base32Spec
+  other-modules:       Data.ULID.AesonSpec
+                     , Data.ULID.Base32Spec
                      , Data.ULID.RandomSpec
                      , Data.ULID.TimeStampSpec
                      , Data.ULIDSpec
@@ -66,6 +74,8 @@ test-suite ulid-test
                      , binary
                      , random
                      , hashable
+                     , aeson
+                     , text
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
   default-extensions:  OverloadedStrings
