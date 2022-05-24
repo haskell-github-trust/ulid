@@ -21,11 +21,14 @@ jobs:
           enable-stack: true
           stack-no-global: true
 
-      - name: Run test suite
-        run: stack test
+      - name: Run test suite including test coverage
+        run: stack test --coverage
 
       - name: Run benchmarks
         run: stack bench
+
+      - name: Build documentation
+        run: stack haddock
 
   macos:
     runs-on: macos-12
@@ -45,8 +48,11 @@ jobs:
           enable-stack: true
           stack-no-global: true
 
-      - name: Run test suite
-        run: stack test
+      - name: Run test suite including test coverage
+        run: stack test --coverage
 
       - name: Run benchmarks
         run: stack bench
+
+      - name: Build documentation
+        run: stack haddock
