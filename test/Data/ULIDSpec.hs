@@ -75,6 +75,7 @@ spec = do
         decode (encode a2) `shouldBe` a2
         encode a1 `shouldNotBe` encode a2
 
+    -- TODO: This can have race conditions
     it "encodes MSB first" $ do
         a1 <- getULIDTime 12345
         let e1 = encode a1
