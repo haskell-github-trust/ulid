@@ -24,6 +24,9 @@ jobs:
       - name: Run test suite
         run: stack test
 
+      - name: Run benchmarks
+        run: stack bench
+
   macos:
     runs-on: macos-12
     steps:
@@ -44,3 +47,6 @@ jobs:
 
       - name: Run test suite
         run: stack test
+
+      - name: Run benchmarks
+        run: stack bench
