@@ -15,7 +15,7 @@ main = do
   print ulid1
 
   -- Derive a ULID using a specified time and default random number generator
-  ulid2 <- getULIDTime 1469918176.385 -- ^ POSIX Time in milliseconds
+  ulid2 <- getULIDTime 1469918176.385 -- POSIX Time in milliseconds
   print ulid2
 
   -- Below only for cryptographically secure ULID example

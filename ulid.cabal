@@ -18,6 +18,7 @@ category:            Data, Codec, Database
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
+tested-with:         GHC == 8.6.5, GHC == 8.8.3
 
 
 library
