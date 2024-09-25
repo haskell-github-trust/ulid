@@ -62,10 +62,7 @@ data ULID = ULID
   { timeStamp :: !ULIDTimeStamp
   , random    :: !ULIDRandom
   }
-  deriving (Eq, Typeable, Data, Generic)
-
-instance Ord ULID where
-    compare (ULID ts1 _) (ULID ts2 _) = compare ts1 ts2
+  deriving (Eq, Ord, Typeable, Data, Generic)
 
 instance Show ULID where
     show (ULID ts bytes) = show ts ++ show bytes
