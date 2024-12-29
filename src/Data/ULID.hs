@@ -42,7 +42,8 @@ import qualified Data.ByteString.Lazy  as LBS
 import           Data.Data
 import           Data.Hashable
 import           Data.Monoid           ((<>))
-import           Data.Text as T
+import           Data.Text             (Text)
+import qualified Data.Text             as T
 import           Data.Time.Clock.POSIX
 import           GHC.Generics
 import           System.IO.Unsafe
