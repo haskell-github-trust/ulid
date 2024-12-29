@@ -6,12 +6,14 @@ import           Data.Binary
 import qualified Data.ByteString.Lazy as LBS
 import           Data.Char
 import           Data.Hashable
-import           Data.List            (nub, sort)
+import           Data.List            (nub, sort, sortOn)
 import qualified System.Random        as R
 
 import           Data.ULID
 
 import           Test.Hspec
+import Data.ULID.TimeStamp (getULIDTimeStamp)
+import Data.ULID.Random (getULIDRandom)
 
 
 spec :: Spec
@@ -33,6 +35,20 @@ spec = do
         let l = [show u3, show u2, show u4, show u1]
         let l' = sort l
         l' `shouldBe` [show u1, show u2, show u3, show u4]
+
+        -- it should be lexicographically sortable even if the timestamps are the same
+        ts <- getULIDTimeStamp
+        ur1 <- getULIDRandom
+        ur2 <- getULIDRandom
+        ur3 <- getULIDRandom
+        ur4 <- getULIDRandom
+
+        let u5 = ULID ts ur1
+        let u6 = ULID ts ur2
+        let u7 = ULID ts ur3
+        let u8 = ULID ts ur4
+
+        sort [u5, u6, u7, u8] `shouldBe` sortOn show [u5, u6, u7, u8]
 
         -- make sure it works in internal representation too :)
         let ul = [u3, u2, u4, u1]
