@@ -19,7 +19,7 @@ Original implementation and spec: [github.com/alizain/ulid]
 ```
 
 
-# Universally Unique Lexicographically Sortable Identifier
+## Universally Unique Lexicographically Sortable Identifier
 
 UUID can be suboptimal for many uses-cases because:
 
@@ -44,6 +44,19 @@ Instead, herein is proposed ULID:
 - No special characters (URL safe)
 
 [Douglas Crockford's base 32]: https://www.crockford.com/base32.html
+
+
+## Known Issues
+
+- No monotonicity guarantees
+    ([official spec](
+      https://github.com/ulid/spec?tab=readme-ov-file#monotonicity))
+- Lexicographically sorted based on the random component
+    if timestamps are the same.
+    This causes the sort order to be non-deterministic
+    for ULIDs with the same timestamp,
+    but is necessary to avoid [incorrect `Map` and `Set` behavior](
+      https://github.com/haskell-github-trust/ulid/issues/15#issuecomment-2426847267).
 
 
 ## Usage
@@ -72,7 +85,7 @@ However, the programmer must manage the generator on their own.
 
 Example:
 
-````haskell
+```haskell
 module Main where
 
 import Data.ULID
@@ -83,21 +96,18 @@ import qualified Data.ULID.TimeStamp as TS
 
 main :: IO ()
 main = do
-  -- This default instantiation may not be sufficiently secure.
-  -- See the docs at
-  -- hackage.haskell.org/package/crypto-api-0.13.2/docs/Crypto-Random.html
   g <- (CR.newGenIO :: IO CR.SystemRandom)
 
   -- Generate timestamp from current time
   t <- TS.getULIDTimeStamp
 
   let ulid3 = case UR.mkCryptoULIDRandom g of
-          Left err        -> error $ show err
-          -- use g2, …, to continue generating secure ULIDs
-          Right (rnd, g2) -> ULID t rnd
+        Left err        -> error $ show err
+        -- Use g2, …, to continue generating secure ULIDs
+        Right (rnd, g2) -> ULID t rnd
 
   print ulid3
-````
+```
 
 
 ## Test Suite
