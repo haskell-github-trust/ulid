@@ -1,3 +1,4 @@
+cabal-version:       3.8
 name:                ulid
 version:             0.3.2.0
 synopsis:            Implementation of ULID - Universally Unique
@@ -9,15 +10,13 @@ description:         Implementation of Alizain Feerasta's ULID specification.
                      for better efficiency and readability
                      (5 bits per character).
 homepage:            https://github.com/ad-si/ulid
-license:             BSD3
+license:             BSD-3-Clause
 license-file:        LICENSE
-author:              Steve Kollmansberger
+author:              Steve Kollmansberger, Adrian Sieber
 maintainer:          ulid@ad-si.com
-copyright:           2017 Steve Kollmansberger
 category:            Data, Codec, Database
 build-type:          Simple
 extra-source-files:  README.md
-cabal-version:       >=1.10
 
 
 library
@@ -52,7 +51,6 @@ executable ulid-exe
 
 
 test-suite ulid-test
-  type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
   other-modules:       Data.ULID.Base32Spec
@@ -72,7 +70,6 @@ test-suite ulid-test
 
 
 benchmark ulid-bench
-  type:                exitcode-stdio-1.0
   hs-source-dirs:      bench
   main-is:             Main.hs
   build-depends:       base
