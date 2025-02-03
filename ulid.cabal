@@ -1,6 +1,6 @@
 cabal-version:       3.8
 name:                ulid
-version:             0.3.2.0
+version:             0.3.3.0
 synopsis:            Implementation of ULID - Universally Unique
                      Lexicographically Sortable Identifier
 description:         Implementation of Alizain Feerasta's ULID specification.
