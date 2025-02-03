@@ -57,7 +57,7 @@ spec = do
   describe "ulid" $ do
     it "starts with 0 (at least for the foreseeable future)" $ do
         u1 <- getULID
-        head (show u1) `shouldBe` '0'
+        take 1 (show u1) `shouldBe` ['0']
 
     it "generates unique ulids in default configuration" $ do
         let ops = 1000
