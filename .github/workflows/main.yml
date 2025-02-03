@@ -4,19 +4,19 @@ on: [push]
 
 jobs:
   linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache .stack-work
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: .stack-work
           key: ulid_stack-work_ubuntu
           restore-keys: ulid_stack-work_ubuntu
 
       - name: Setup Stack
-        uses: haskell/actions/setup@v1
+        uses: haskell-actions/setup@v2
         with:
           enable-stack: true
           stack-no-global: true
@@ -31,19 +31,19 @@ jobs:
         run: stack haddock
 
   macos:
-    runs-on: macos-12
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache .stack-work
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: .stack-work
           key: ulid_stack-work_macos
           restore-keys: ulid_stack-work_macos
 
       - name: Setup Stack
-        uses: haskell/actions/setup@v1
+        uses: haskell-actions/setup@v2
         with:
           enable-stack: true
           stack-no-global: true
